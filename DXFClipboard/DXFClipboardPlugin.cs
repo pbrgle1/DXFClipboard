@@ -18,14 +18,29 @@ namespace DXFClipboard
         public override PlugInLoadTime LoadTime => PlugInLoadTime.AtStartup;
 
         /// <summary>
-        /// DXF export settings, loaded from persistent storage on plugin load.
+        /// DXF export settings. Loaded lazily from persistent storage on first access.
         /// </summary>
-        public DxfExportSettings ExportSettings { get; } = new DxfExportSettings();
-
-        protected override LoadReturnCode OnLoad(ref string errorMessage)
+        public DxfExportSettings ExportSettings
         {
-            ExportSettings.Load(Settings);
-            return LoadReturnCode.Success;
+            get
+            {
+                if (!_settingsLoaded)
+                {
+                    _settingsLoaded = true;
+                    try
+                    {
+                        _exportSettings.Load(Settings);
+                    }
+                    catch
+                    {
+                        // First run or corrupt settings — defaults are fine.
+                    }
+                }
+                return _exportSettings;
+            }
         }
+
+        private readonly DxfExportSettings _exportSettings = new DxfExportSettings();
+        private bool _settingsLoaded;
     }
 }
