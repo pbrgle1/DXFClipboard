@@ -15,7 +15,7 @@ namespace DXFClipboard
     /// CopyAsDXF — exports selected curves/points as DXF text and puts it on the Windows clipboard.
     /// Bind to Ctrl+Shift+C in Rhino Options → Keyboard.
     /// </summary>
-    [CommandStyle(Style.Hidden)]
+
     public class CopyAsDXFCommand : Command
     {
         public CopyAsDXFCommand()

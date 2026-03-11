@@ -1,0 +1,17 @@
+---
+name: DXFclipboard
+version: 1.0.4
+authors:
+- pbrgle1
+description: >
+  Copies selected Rhino curves and points as DXF text
+  to the Windows clipboard via the CopyAsDXF command.
+  Useful for pasting geometry into other applications.
+url: "https://github.com/pbrgle1/DXFClipboard"
+icon: icon.png
+keywords:
+- dxf
+- clipboard
+- export
+- curves
+- copy
