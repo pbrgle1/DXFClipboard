@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Rhino plugin manifest.
+  Place this file next to DXFClipboard.rhp when installing.
+-->
+<plugin id="{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+        version="1.0.0"
+        name="DXFClipboard"
+        organization="PrimozDev"
+        address=""
+        country=""
+        phone=""
+        fax=""
+        email=""
+        website=""
+        updateUrl=""
+        description="Copies selected Rhino curves/points as DXF text to the Windows clipboard via CopyAsDXF command."
+        icon="">
+</plugin>
