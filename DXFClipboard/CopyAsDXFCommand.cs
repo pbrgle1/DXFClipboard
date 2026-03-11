@@ -91,23 +91,23 @@ namespace DXFClipboard
             var writeOptions = new FileDwgWriteOptions
             {
                 // AC2013 = AutoCAD 2013/R19, broadly compatible
-                FileVersion = FileDwgWriteOptions.DwgVersion.Dwg2013,
+                Version = FileDwgWriteOptions.AutocadVersion.Acad2013,
 
                 // Geometry representation
-                ExportMeshesAs    = 6,   // as-is meshes
-                ExportSurfacesAs  = 5,   // NURBS surfaces
-                ExportLinesAs     = 0,   // lines stay lines
-                ExportArcsAs      = 1,   // arcs stay arcs
-                ExportSplinesAs   = 4,   // splines as splines
-                ExportPolylinesAs = 3,   // polylines stay polylines
-                ExportPolycurvesAs = 4,  // polycurves as splines
+                ExportMeshesAs    = FileDwgWriteOptions.ExportMeshMode.Meshes,
+                ExportSurfacesAs  = FileDwgWriteOptions.ExportSurfaceMode.Solids,
+                ExportLinesAs     = FileDwgWriteOptions.ExportLineMode.Lines,
+                ExportArcsAs      = FileDwgWriteOptions.ExportArcMode.Arcs,
+                ExportSplinesAs   = FileDwgWriteOptions.ExportSplineMode.Splines,
+                ExportPolylinesAs = FileDwgWriteOptions.ExportPolylineMode.Polylines,
+                ExportPolycurvesAs = FileDwgWriteOptions.ExportPolycurveMode.Splines,
 
                 // Tessellation quality
-                MaxAngle = 1.0,          // 1° max deviation for arc/spline approximation
+                CurveMaxAngleDegrees = 1.0,          // 1° max deviation for arc/spline approximation
 
                 // Structural
-                FlattenHierarchy = false,
-                UseFullLayerPath = true,
+                Flatten = FileDwgWriteOptions.FlattenMode.None,
+                FullLayerPath = true,
             };
 
             // ── 4. Write to temp file ──────────────────────────────────────────
@@ -123,7 +123,7 @@ namespace DXFClipboard
 
             var tempPath = System.IO.Path.Combine(TempDir, $"rhino_dxf_{System.Guid.NewGuid():N}.dxf");
 
-            bool wrote = FileDwg.WriteFile(tempPath, tempDoc, writeOptions);
+            bool wrote = FileDwg.Write(tempPath, tempDoc, writeOptions);
             if (!wrote || !System.IO.File.Exists(tempPath))
             {
                 RhinoApp.WriteLine("DXFClipboard: DXF export failed — file was not created.");
