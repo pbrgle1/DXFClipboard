@@ -15,7 +15,17 @@ namespace DXFClipboard
 
         public static DXFClipboardPlugin? Instance { get; private set; }
 
-        // No UI, no menus — just the command.
         public override PlugInLoadTime LoadTime => PlugInLoadTime.AtStartup;
+
+        /// <summary>
+        /// DXF export settings, loaded from persistent storage on plugin load.
+        /// </summary>
+        public DxfExportSettings ExportSettings { get; } = new DxfExportSettings();
+
+        protected override LoadReturnCode OnLoad(ref string errorMessage)
+        {
+            ExportSettings.Load(Settings);
+            return LoadReturnCode.Success;
+        }
     }
 }

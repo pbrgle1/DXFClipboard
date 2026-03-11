@@ -1,7 +1,11 @@
 # DXFClipboard - Rhino Plugin
 
 ## Project Overview
-Rhino 8 plugin that copies selected curves and points as DXF text to the Windows clipboard via the `CopyAsDXF` command. Published to the Rhino Package Manager as `DXFclipboard`.
+Rhino 8 plugin that copies selected curves and points as DXF text to the Windows clipboard. Published to the Rhino Package Manager as `DXFclipboard`.
+
+**Commands:**
+- `CopyAsDXF` — select curves/points, copies DXF to clipboard
+- `CopyAsDXFSettings` — configure DXF export options (persists across sessions)
 
 ## Project Structure
 ```
@@ -9,8 +13,10 @@ DXFClipboard/
 ├── DXFClipboard.sln              # VS 2022 solution
 ├── DXFClipboard/
 │   ├── DXFClipboard.csproj       # .NET 7.0-windows, outputs .rhp
-│   ├── DXFClipboardPlugin.cs     # Plugin entry point (loads at startup)
-│   └── CopyAsDXFCommand.cs       # Main command: CopyAsDXF
+│   ├── DXFClipboardPlugin.cs     # Plugin entry point, holds ExportSettings
+│   ├── DxfExportSettings.cs      # Settings class: load/save/defaults/BuildWriteOptions
+│   ├── CopyAsDXFCommand.cs       # Main command: CopyAsDXF
+│   └── CopyAsDXFSettingsCommand.cs # Settings command: CopyAsDXFSettings
 ├── dist/
 │   ├── manifest.yml              # Yak package manifest
 │   ├── icon.png                  # Package icon
@@ -19,6 +25,13 @@ DXFClipboard/
 ├── README.md
 └── LICENSE                       # MIT
 ```
+
+## Architecture
+- `DxfExportSettings` owns all 24 DXF export properties with defaults, persistence via `PersistentSettings` (int storage for enums), and `BuildWriteOptions()` to create `FileDwgWriteOptions`
+- `DXFClipboardPlugin.ExportSettings` is the singleton settings instance, loaded in `OnLoad()`
+- `CopyAsDXFCommand` calls `ExportSettings.BuildWriteOptions()` — no hardcoded values
+- `CopyAsDXFSettingsCommand` uses `GetOption` with sub-menus (General/Curves/Reset), saves on Enter, cancels on Escape
+- Settings stored as int (enums), bool, double via `PersistentSettings.SetInteger`/`SetBool`/`SetDouble`
 
 ## Build
 ```bash
@@ -44,7 +57,6 @@ The `RhinoDir` property must point to Rhino 8's System folder (where `RhinoCommo
 
 ## Key Details
 - **Package name on yak**: `DXFclipboard` (note casing)
-- **Current published version**: 1.0.4
 - **Target framework**: net7.0-windows
 - **Rhino references**: `RhinoCommon.dll` and `Rhino.UI.dll` via `$(RhinoDir)` MSBuild property (not NuGet)
 - **Command visibility**: Do NOT use `[CommandStyle(Style.Hidden)]` — it prevents commands from appearing in Rhino's autocomplete
